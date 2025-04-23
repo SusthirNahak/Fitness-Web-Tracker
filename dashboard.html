@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitness Web Tracker</title>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+
+  <style>
+    :root {
+      --header-height: 60px;
+      --sidebar-width: 250px;
+    }
+
+    /* reset & box-sizing */
+    *, *::before, *::after {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      color: #333;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0; left: 0;
+      width: 100%;
+      height: var(--header-height);
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 1000;
+    }
+    header img.logo {
+      height: 40px;
+    }
+    header .btn-trial {
+      background: #ff1e00;               /* or your brand gradient */
+      color: #fff;
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    /* ===== LAYOUT ===== */
+    .layout {
+      display: flex;
+    }
+
+    /* ===== SIDEBAR ===== */
+    aside {
+      position: sticky;
+      top: var(--header-height);
+      width: var(--sidebar-width);
+      height: calc(100vh - var(--header-height));
+      background: #343a40;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    aside h4 {
+      color: #fff;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    aside ul {
+      list-style: none;
+    }
+    aside ul li + li {
+      margin-top: 0.5rem;
+    }
+    aside ul a {
+      display: block;
+      color: #ddd;
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+    aside ul a.active,
+    aside ul a:hover {
+      background: #495057;
+      color: #fff;
+    }
+
+    /* ===== CONTENT ===== */
+    main {
+      flex: 1;
+      height: calc(100vh - var(--header-height));
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+    /* Sidebar header */
+aside h4 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Sidebar list reset */
+aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Each item */
+aside ul li + li {
+  margin-top: 0.5rem;
+}
+
+/* Flex‐align link + icon */
+aside ul a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  color: #ddd;
+  text-decoration: none;
+  transition: background-color .2s, color .2s;
+}
+
+/* Give every icon a fixed width */
+aside ul a i {
+  width: 24px;
+  min-width: 24px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Space between icon and text */
+aside ul a span {
+  margin-left: 0.75rem;
+  line-height: 1.2;
+}
+
+/* Active & hover states */
+aside ul a.active,
+aside ul a:hover {
+  background: #495057;
+  color: #fff;
+}
+
+
+/* Main content spacing */
+main {
+  padding: 2rem;
+  overflow-y: auto;
+}
+main .module {
+  margin-bottom: 2rem;
+}
+main h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+main h2 i {
+  font-size: 1.25rem;
+  margin-right: 0.5rem;
+}
+.module-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+  .module-body > .input-area,
+  .module-body > .output-area {
+    flex: 1;
+    min-width: 280px;
+    background: #fff;
+    padding: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+  }
+  /* inputs/buttons */
+  .input-area label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+  }
+  .input-area input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .input-area button {
+    display: block;
+    width: 100%;
+    background: #ff1e00;
+    color: #fff;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  /* result & chart */
+  .output-area h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  .output-area canvas {
+    width: 100% !important;
+    height: 250px !important;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <!-- logo left -->
+    <a href="index.html">
+      <img class="logo" src="assets/img/them-logo.png" alt="Promix Logo">
+    </a>
+
+    <!-- trial button right -->
+         
+      <a href="http://127.0.0.1:5500/index.html" class="btn-trial"><span>Back to Home</span></a>
+   
+  </header>
+
+ <!-- SIDEBAR + CONTENT -->
+<div class="layout">
+
+  <!-- MENU SIDEBAR -->
+  <aside>
+    <h4>Menu</h4>
+    <ul id="moduleList">
+      <li>
+        <a href="#" class="active" data-module="bmi">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <span>BMI &amp; Body-Fat Estimator</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="sleep">
+          <i class="fa-solid fa-bed"></i>
+          <span>Sleep Tracker</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="meal">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Meal &amp; Nutrition Logger</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="calorie">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Calorie &amp; Macro Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="activity">
+          <i class="fa-solid fa-dumbbell"></i>
+          <span>Activity &amp; Workout Log</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="water">
+          <i class="fa-solid fa-tint"></i>
+          <span>Water Intake Tracker</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="measurements">
+          <i class="fa-solid fa-ruler-combined"></i>
+          <span>Body Measurements &amp; Photo Progress</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="weight">
+          <i class="fa-solid fa-weight-scale"></i>
+          <span>Weight Trend Chart</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="goals">
+          <i class="fa-solid fa-bullseye"></i>
+          <span>Custom Goals &amp; Reminders</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-module="mindfulness">
+          <i class="fa-solid fa-brain"></i>
+          <span>Stress &amp; Mindfulness Tracker</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main id="content">
+    <div id="bmi" class="module">
+      <h2><i class="fa-solid fa-heart-pulse me-2"></i>BMI &amp; Body-Fat Estimator</h2>
+  
+      <div class="module-body">
+        <!-- Left: Inputs -->
+        <div class="input-area">
+          <label for="heightInput">Height (cm)</label>
+          <input type="number" id="heightInput" placeholder="e.g. 170" />
+  
+          <label for="weightInput">Weight (kg)</label>
+          <input type="number" id="weightInput" placeholder="e.g. 65" />
+  
+          <button id="bmiCalcBtn">Calculate BMI</button>
+        </div>
+  
+        <!-- Right: Result + Chart -->
+        <div class="output-area">
+          <h3>Your BMI: <span id="bmiOutput">—</span></h3>
+          <canvas id="bmiChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Sleep Tracker -->
+    <div id="sleep" class="module" style="display:none;">
+      <h2><i class="fa-solid fa-bed me-2"></i>Sleep Tracker</h2>
+  
+      <div class="module-body">
+        <!-- Left: Inputs -->
+        <div class="input-area">
+          <label for="sleepStartInput">Sleep Start</label>
+          <input type="time" id="sleepStartInput" />
+  
+          <label for="sleepEndInput">Wake Up</label>
+          <input type="time" id="sleepEndInput" />
+  
+          <button id="sleepCalcBtn">Calculate Sleep</button>
+        </div>
+  
+        <!-- Right: Result + Chart -->
+        <div class="output-area">
+          <h3>Hours Slept: <span id="sleepOutput">—</span></h3>
+          <canvas id="sleepChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Meal & Nutrition Logger -->
+<div id="meal" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-utensils me-2"></i>Meal &amp; Nutrition Logger</h2>
+  <div class="module-body">
+    <!-- Left: Inputs -->
+    <div class="input-area">
+      <label for="mealNameInput">Meal Name</label>
+      <input type="text" id="mealNameInput" placeholder="e.g. Breakfast" />
+
+      <label for="caloriesInput">Calories (kcal)</label>
+      <input type="number" id="caloriesInput" placeholder="e.g. 400" />
+
+      <label for="proteinInput">Protein (g)</label>
+      <input type="number" id="proteinInput" placeholder="e.g. 25" />
+
+      <label for="carbsInput">Carbs (g)</label>
+      <input type="number" id="carbsInput" placeholder="e.g. 50" />
+
+      <label for="fatInput">Fat (g)</label>
+      <input type="number" id="fatInput" placeholder="e.g. 15" />
+
+      <button id="mealLogBtn">Log Meal</button>
+    </div>
+    <!-- Right: Result + Chart -->
+    <div class="output-area">
+      <h3>Today's Nutrition</h3>
+      <canvas id="mealChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Calorie & Macro Dashboard -->
+<div id="calorie" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-chart-pie me-2"></i>Calorie &amp; Macro Dashboard</h2>
+  <div class="module-body">
+    <!-- Left: Filters -->
+    <div class="input-area">
+      <label for="macroDateInput">Select Date</label>
+      <input type="date" id="macroDateInput" />
+
+      <button id="macroShowBtn">Show Dashboard</button>
+    </div>
+    <!-- Right: Dashboard Charts -->
+    <div class="output-area">
+      <h3>Macro Breakdown</h3>
+      <canvas id="macroChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Activity & Workout Log -->
+<div id="activity" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-dumbbell me-2"></i>Activity &amp; Workout Log</h2>
+  <div class="module-body">
+    <!-- Left: Inputs -->
+    <div class="input-area">
+      <label for="activityTypeInput">Activity Type</label>
+      <input type="text" id="activityTypeInput" placeholder="e.g. Running" />
+
+      <label for="durationInput">Duration (minutes)</label>
+      <input type="number" id="durationInput" placeholder="e.g. 30" />
+
+      <button id="activityLogBtn">Log Activity</button>
+    </div>
+    <!-- Right: Log & Chart -->
+    <div class="output-area">
+      <h3>Weekly Activity</h3>
+      <canvas id="activityChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 6. Water Intake Tracker -->
+<div id="water" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-tint me-2"></i>Water Intake Tracker</h2>
+  <div class="module-body">
+    <!-- Left: Quick Add -->
+    <div class="input-area">
+      <label for="waterQtyInput">Glasses of Water</label>
+      <input type="number" id="waterQtyInput" placeholder="e.g. 1" min="1" />
+
+      <button id="waterAddBtn">Add Water</button>
+    </div>
+    <!-- Right: Progress Graphic -->
+    <div class="output-area">
+      <h3>Daily Intake</h3>
+      <canvas id="waterChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 7. Body Measurements & Photo Progress -->
+<div id="measurements" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-camera-retro me-2"></i>Body Measurements &amp; Photo Progress</h2>
+  <div class="module-body">
+    <!-- Left: Inputs -->
+    <div class="input-area">
+      <label for="waistInput">Waist (cm)</label>
+      <input type="number" id="waistInput" placeholder="e.g. 80" />
+
+      <label for="hipsInput">Hips (cm)</label>
+      <input type="number" id="hipsInput" placeholder="e.g. 95" />
+
+      <label for="photoInput">Upload Photo</label>
+      <input type="file" id="photoInput" accept="image/*" />
+
+      <button id="measureLogBtn">Save Measurement</button>
+    </div>
+    <!-- Right: History & Images -->
+    <div class="output-area">
+      <h3>Progress Timeline</h3>
+      <canvas id="measureChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Weight Trend Chart -->
+<div id="weight" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-weight-scale me-2"></i>Weight Trend Chart</h2>
+  <div class="module-body">
+    <!-- Left: Inputs -->
+    <div class="input-area">
+      <label for="weightInput">Weight (kg)</label>
+      <input type="number" id="weightInput" placeholder="e.g. 70" />
+
+      <label for="weightDateInput">Date</label>
+      <input type="date" id="weightDateInput" />
+
+      <button id="weightLogBtn">Log Weight</button>
+    </div>
+    <!-- Right: Trend Chart -->
+    <div class="output-area">
+      <h3>Weight Over Time</h3>
+      <canvas id="weightChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 9. Custom Goals & Reminders -->
+<div id="goals" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-bullseye me-2"></i>Custom Goals &amp; Reminders</h2>
+  <div class="module-body">
+    <!-- Left: Goal Setup -->
+    <div class="input-area">
+      <label for="goalTypeInput">Goal Type</label>
+      <input type="text" id="goalTypeInput" placeholder="e.g. Drink Water" />
+
+      <label for="goalValueInput">Target Value</label>
+      <input type="number" id="goalValueInput" placeholder="e.g. 8" />
+
+      <button id="goalSetBtn">Set Goal</button>
+    </div>
+    <!-- Right: Active Goals -->
+    <div class="output-area">
+      <h3>Active Goals</h3>
+      <ul id="goalsList"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- 10. Stress & Mindfulness Tracker -->
+<div id="mindfulness" class="module" style="display:none;">
+  <h2><i class="fa-solid fa-brain me-2"></i>Stress &amp; Mindfulness Tracker</h2>
+  <div class="module-body">
+    <!-- Left: Mood Check -->
+    <div class="input-area">
+      <label for="moodInput">Mood (1–10)</label>
+      <input type="number" id="moodInput" min="1" max="10" placeholder="e.g. 7" />
+
+      <label for="noteInput">Notes</label>
+      <input type="text" id="noteInput" placeholder="optional" />
+
+      <button id="moodLogBtn">Save Mood</button>
+    </div>
+    <!-- Right: Mood Chart -->
+    <div class="output-area">
+      <h3>Recent Mood</h3>
+      <canvas id="mindfulnessChart"></canvas>
+    </div>
+  </div>
+</div>
+
+  </main>
+
+</div>
+
+<!-- 1) Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+
+<!-- 2) Module-switching & Charts setup -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  // --- MODULE SWITCHING ---
+  document.querySelectorAll('#moduleList a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('#moduleList a').forEach(a => a.classList.remove('active'));
+      link.classList.add('active');
+      document.querySelectorAll('.module').forEach(m => m.style.display = 'none');
+      document.getElementById(link.dataset.module).style.display = 'block';
+    });
+  });
+
+  // --- GLOBAL DATA STORES & UTILS ---
+  const meals = [];
+  const activities = [];
+
+  function formatDate(date = new Date()) {
+    return date.toISOString().slice(0, 10);  // YYYY-MM-DD
+  }
+  function sum(arr) {
+    return arr.reduce((a, b) => a + b, 0);
+  }
+
+  // --- 1) BMI CHART ---
+  const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+  const bmiGradient = bmiCtx.createLinearGradient(0, 0, 0, 250);
+  bmiGradient.addColorStop(0, '#ff1e00');
+  bmiGradient.addColorStop(1, '#ff7426');
+  const bmiChart = new Chart(bmiCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['BMI', 'Remaining'],
+      datasets: [{
+        data: [0, 50],
+        backgroundColor: [bmiGradient, '#e9ecef']
+      }]
+    },
+    options: {
+      cutout: '70%',
+      rotation: Math.PI,
+      circumference: Math.PI,
+      plugins:{ legend:{ display:false } }
+    }
+  });
+  document.getElementById('bmiCalcBtn').addEventListener('click', () => {
+    const h = parseFloat(document.getElementById('heightInput').value) / 100;
+    const w = parseFloat(document.getElementById('weightInput').value);
+    if (!h || !w) return;
+    const bmi = +(w / (h * h)).toFixed(2);
+    document.getElementById('bmiOutput').textContent = bmi;
+    bmiChart.data.datasets[0].data = [bmi, Math.max(0, 50 - bmi)];
+    bmiChart.update();
+  });
+
+  // --- 2) SLEEP CHART ---
+  const sleepCtx = document.getElementById('sleepChart').getContext('2d');
+  const sleepChart = new Chart(sleepCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Hours Slept'],
+      datasets: [{ data: [0], backgroundColor: '#4BC0C0' }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true, suggestedMax: 12 } },
+      plugins:{ legend:{ display:false } }
+    }
+  });
+  document.getElementById('sleepCalcBtn').addEventListener('click', () => {
+    const start = document.getElementById('sleepStartInput').value;
+    const end   = document.getElementById('sleepEndInput').value;
+    if (!start || !end) return;
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    let ds = new Date(), de = new Date();
+    ds.setHours(sh, sm); de.setHours(eh, em);
+    if (de <= ds) de.setDate(de.getDate() + 1);
+    const hours = +(((de - ds) / 3600000).toFixed(2));
+    document.getElementById('sleepOutput').textContent = hours;
+    sleepChart.data.datasets[0].data = [hours];
+    sleepChart.update();
+  });
+
+  // --- 3) MEAL LOGGER CHART ---
+  const mealCtx = document.getElementById('mealChart').getContext('2d');
+  const mealChart = new Chart(mealCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Protein','Carbs','Fat'],
+      datasets: [{
+        data: [0,0,0],
+        backgroundColor: ['#36A2EB','#FFCE56','#FF6384']
+      }]
+    },
+    options: { plugins:{ legend:{ position:'bottom' } } }
+  });
+  document.getElementById('mealLogBtn').addEventListener('click', () => {
+    const name    = document.getElementById('mealNameInput').value.trim();
+    const cals    = +document.getElementById('caloriesInput').value;
+    const protein = +document.getElementById('proteinInput').value;
+    const carbs   = +document.getElementById('carbsInput').value;
+    const fat     = +document.getElementById('fatInput').value;
+    if (!name || !cals) return;
+    meals.push({ date: formatDate(), cals, protein, carbs, fat });
+    const today = meals.filter(m => m.date === formatDate());
+    mealChart.data.datasets[0].data = [
+      sum(today.map(m => m.protein)),
+      sum(today.map(m => m.carbs)),
+      sum(today.map(m => m.fat))
+    ];
+    mealChart.update();
+    ['mealNameInput','caloriesInput','proteinInput','carbsInput','fatInput']
+      .forEach(id => document.getElementById(id).value = '');
+  });
+
+  // --- 4) MACRO DASHBOARD CHART ---
+  const macroCtx = document.getElementById('macroChart').getContext('2d');
+  const macroChart = new Chart(macroCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Protein','Carbs','Fat'],
+      datasets: [{ data: [0,0,0], backgroundColor: ['#36A2EB','#FFCE56','#FF6384'] }]
+    },
+    options: { plugins:{ legend:{ position:'bottom' } } }
+  });
+  document.getElementById('macroShowBtn').addEventListener('click', () => {
+    const date = document.getElementById('macroDateInput').value;
+    if (!date) return;
+    const dayMeals = meals.filter(m => m.date === date);
+    macroChart.data.datasets[0].data = [
+      sum(dayMeals.map(m => m.protein)),
+      sum(dayMeals.map(m => m.carbs)),
+      sum(dayMeals.map(m => m.fat))
+    ];
+    macroChart.update();
+  });
+
+  // --- 5) ACTIVITY LOG CHART ---
+  const activityCtx = document.getElementById('activityChart').getContext('2d');
+  const actGrad = activityCtx.createLinearGradient(0,0,0,200);
+  actGrad.addColorStop(0, 'rgba(75,192,192,0.4)');
+  actGrad.addColorStop(1, 'rgba(75,192,192,0)');
+  const activityChart = new Chart(activityCtx, {
+    type: 'line',
+    data: { labels: [], datasets: [{
+      label: 'Minutes',
+      data: [],
+      fill: true,
+      backgroundColor: actGrad,
+      borderColor: 'rgba(75,192,192,1)',
+      tension: 0.4,
+      pointRadius: 4
+    }]},
+    options: {
+      scales: {
+        x: { title: { display: true, text: 'Date' } },
+        y: { beginAtZero: true, title: { display: true, text: 'Minutes' } }
+      },
+      plugins:{ legend:{ display:false } }
+    }
+  });
+  document.getElementById('activityLogBtn').addEventListener('click', () => {
+    const type = document.getElementById('activityTypeInput').value.trim();
+    const dur  = +document.getElementById('durationInput').value;
+    if (!type || !dur) return;
+    activities.push({ date: formatDate(), type, dur });
+    const labels = [], data = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const day = formatDate(d);
+      labels.push(day);
+      data.push(sum(activities.filter(a => a.date === day).map(a => a.dur)));
+    }
+    activityChart.data.labels = labels;
+    activityChart.data.datasets[0].data = data;
+    activityChart.update();
+    document.getElementById('activityTypeInput').value = '';
+    document.getElementById('durationInput').value     = '';
+  });
+  
+  
+}); // end DOMContentLoaded
+</script>
+<!-- 6–10) Water, Measurements, Weight, Goals, Mindfulness -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // GLOBAL STORES
+    const waterData = [];
+    const measurementData = [];
+    const weightData = [];
+    const goals = [];
+    const moods = [];
+  
+    // 6) WATER INTAKE TRACKER
+    const waterCtx = document.getElementById('waterChart').getContext('2d');
+    const waterChart = new Chart(waterCtx, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{ label: 'Glasses', data: [], backgroundColor: '#36A2EB' }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Date' } },
+          y: { beginAtZero: true, title: { display: true, text: 'Glasses' } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+    document.getElementById('waterAddBtn').addEventListener('click', () => {
+      const qty = +document.getElementById('waterQtyInput').value;
+      if (!qty) return;
+      waterData.push({ date: formatDate(), qty });
+      // Last 7 days
+      const labels = [], data = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const day = formatDate(d);
+        labels.push(day);
+        data.push(sum(waterData.filter(w => w.date === day).map(w => w.qty)));
+      }
+      waterChart.data.labels = labels;
+      waterChart.data.datasets[0].data = data;
+      waterChart.update();
+      document.getElementById('waterQtyInput').value = '';
+    });
+  
+    // 7) BODY MEASUREMENTS & PHOTO PROGRESS
+    const measureCtx = document.getElementById('measureChart').getContext('2d');
+    const measureChart = new Chart(measureCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Waist (cm)', data: [], borderColor: '#ff6384', tension: 0.4, fill: false },
+          { label: 'Hips (cm)',  data: [], borderColor: '#36A2EB', tension: 0.4, fill: false }
+        ]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Date' } },
+          y: { title: { display: true, text: 'cm' } }
+        },
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
+    document.getElementById('measureLogBtn').addEventListener('click', () => {
+      const waist = +document.getElementById('waistInput').value;
+      const hips  = +document.getElementById('hipsInput').value;
+      if (!waist || !hips) return;
+      measurementData.push({ date: formatDate(), waist, hips });
+      measureChart.data.labels = measurementData.map(m => m.date);
+      measureChart.data.datasets[0].data = measurementData.map(m => m.waist);
+      measureChart.data.datasets[1].data = measurementData.map(m => m.hips);
+      measureChart.update();
+      ['waistInput','hipsInput','photoInput'].forEach(id => document.getElementById(id).value = '');
+    });
+  
+    // 8) WEIGHT TREND CHART
+    const weightCtx = document.getElementById('weightChart').getContext('2d');
+    const weightChart = new Chart(weightCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{ label: 'Weight (kg)', data: [], borderColor: '#4BC0C0', tension: 0.4, fill: false }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Date' } },
+          y: { title: { display: true, text: 'kg' } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+    document.getElementById('weightLogBtn').addEventListener('click', () => {
+      const wt   = +document.getElementById('weightInput').value;
+      const date = document.getElementById('weightDateInput').value;
+      if (!wt || !date) return;
+      weightData.push({ date, weight: wt });
+      weightData.sort((a, b) => new Date(a.date) - new Date(b.date));
+      weightChart.data.labels = weightData.map(w => w.date);
+      weightChart.data.datasets[0].data = weightData.map(w => w.weight);
+      weightChart.update();
+      ['weightInput','weightDateInput'].forEach(id => document.getElementById(id).value = '');
+    });
+  
+    // 9) CUSTOM GOALS & REMINDERS
+    const goalsList = document.getElementById('goalsList');
+    document.getElementById('goalSetBtn').addEventListener('click', () => {
+      const type  = document.getElementById('goalTypeInput').value.trim();
+      const value = +document.getElementById('goalValueInput').value;
+      if (!type || !value) return;
+      goals.push({ type, value });
+      goalsList.innerHTML = goals
+        .map(g => `<li>${g.type}: ${g.value}</li>`)
+        .join('');
+      ['goalTypeInput','goalValueInput'].forEach(id => document.getElementById(id).value = '');
+    });
+  
+    // 10) STRESS & MINDFULNESS TRACKER
+    const moodCtx = document.getElementById('mindfulnessChart').getContext('2d');
+    const moodChart = new Chart(moodCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Mood (1–10)',
+          data: [],
+          borderColor: '#ff9f40',
+          tension: 0.4,
+          fill: false,
+        }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Date' } },
+          y: { beginAtZero: true, suggestedMax: 10, title: { display: true, text: 'Mood' } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+    document.getElementById('moodLogBtn').addEventListener('click', () => {
+      const mood = +document.getElementById('moodInput').value;
+      const note = document.getElementById('noteInput').value.trim();
+      if (!mood) return;
+      moods.push({ date: formatDate(), mood, note });
+      moodChart.data.labels = moods.map(m => m.date);
+      moodChart.data.datasets[0].data = moods.map(m => m.mood);
+      moodChart.update();
+      ['moodInput','noteInput'].forEach(id => document.getElementById(id).value = '');
+    });
+  
+  }); // end DOMContentLoaded
+  </script>
+  
+  <!-- after you load Chart.js and your module HTML… -->
+
+</body>
+</html>
