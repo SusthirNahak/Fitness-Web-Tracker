@@ -4243,3 +4243,40 @@ body.three .watch-img.three .location .data p {
     margin-top: 0;
   }
 }/*# sourceMappingURL=main.css.map */
+
+footer {
+  background-color: #000; /* pure black background */
+  color: white;           /* default text color */
+}
+
+footer h5 {
+  color: white;           /* headings white */
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+footer a {
+  color: white;           /* link text white */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #00ffcc;         /* subtle hover effect */
+  text-decoration: underline;
+}
+
+footer i {
+  margin-right: 15px;
+}
+
+footer hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  footer .row {
+    text-align: center;
+  }
+}
