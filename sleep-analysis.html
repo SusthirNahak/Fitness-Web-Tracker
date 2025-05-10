@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Analysis - Fitness Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0F0E17;
+            color: #FFFFFF;
+            line-height: 1.6;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('https://fitness-web-tracker.vercel.app/assets/topographic-pattern.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 88vw;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        #stickyHeader {
+            background-color: #000000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: auto;
+            width: 140px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #CFFF04;
+        }
+
+        .login .btn {
+            background-color: #CFFF04;
+            color: #0F0E17;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .login .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(207, 255, 4, 0.5);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+
+        .hero-section h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #CFFF04;
+            text-transform: uppercase;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            background-color: rgba(26, 24, 35, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .content-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #D1D1D1;
+        }
+
+        .content-section ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .content-section ul li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #D1D1D1;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .content-section ul li:before {
+            content: '•';
+            color: #CFFF04;
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+        }
+
+        .sleep-table {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .sleep-table h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(26, 24, 35, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #2A2833;
+        }
+
+        th {
+            background-color: #CFFF04;
+            color: #0F0E17;
+        }
+
+        td {
+            color: #D1D1D1;
+        }
+
+        .sleep-graph {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .sleep-graph h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        pre {
+            background-color: #2A2833;
+            padding: 20px;
+            border-radius: 5px;
+            color: #D1D1D1;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            white-space: pre;
+        }
+
+        .strategy-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .strategy-card {
+            background-color: rgba(26, 24, 35, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px rgba(207, 255, 4, 0.3);
+        }
+
+        .strategy-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #CFFF04;
+            margin-bottom: 10px;
+        }
+
+        .strategy-card p {
+            color: #D1D1D1;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background-color: #CFFF04;
+            color: #0F0E17;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(207, 255, 4, 0.5);
+        }
+
+        /* Footer Styling */
+        footer.bg-dark {
+            background-color: #0F0E17;
+            color: #FFFFFF;
+        }
+
+        footer h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #CFFF04;
+        }
+
+        footer p, footer a {
+            font-size: 1rem;
+            color: #f3f3f3;
+        }
+
+        footer a:hover {
+            color: #CFFF04;
+            text-decoration: none;
+        }
+
+        footer hr {
+            border-top: 1px solid rgba(207, 255, 4, 0.2);
+        }
+
+        footer .row.align-items-center p {
+            margin: 0;
+        }
+
+        footer .fab {
+            transition: color 0.3s;
+        }
+
+        footer .fab:hover {
+            color: #CFFF04;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .content-section h2, .sleep-table h2, .sleep-graph h2 {
+                font-size: 1.8rem;
+            }
+
+            .content-section p, .content-section ul li {
+                font-size: 1rem;
+            }
+
+            .strategy-card {
+                width: 100%;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+                footer .row.align-items-center p {
+    margin: 0;
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <header id="stickyHeader">
+        <div class="container">
+            <div class="top-bar">
+                <div class="logo">
+                    <a href="#">
+                        <img alt="logo" src="./assets/img/fitness-logo.png">
+                    </a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"></a></li>
+                        <li><a href="Bmi-body-stats.html">BMI & Body Stats</a></li>
+                        <li><a href="activity-log.html">Activity Log</a></li>
+                        <li><a href="nutrition-meal-tracking.html">Meal Tracking</a></li>
+                        <li><a href="sleep-analysis.html">Sleep Analysis</a></li>
+                        <li><a href="index.html">Home</a></li>
+                    </ul>
+                </nav>
+                <div class="login">
+                    <a href="./dashboard.html" class="btn"><span>Dashboard</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Sleep Analysis</h1>
+            <p>Unlock the secrets of better rest—learn how sleep impacts your fitness, health, and overall well-being.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Why Sleep is Crucial</h2>
+            <p>Sleep is a cornerstone of health, just as important as diet and exercise. It’s during sleep that your body repairs itself, consolidates memories, and regulates hormones. For fitness enthusiasts, sleep is especially critical—it aids muscle recovery, boosts performance, and helps maintain a healthy metabolism. Lack of sleep can lead to increased stress, impaired cognitive function, and even weight gain due to hormonal imbalances that increase appetite.</p>
+            <p>Studies show that adults who get less than 7 hours of sleep per night are at higher risk for chronic conditions like diabetes, heart disease, and obesity. Prioritizing sleep can improve your mood, energy levels, and overall quality of life, making it an essential part of your fitness journey.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Sleep and Fitness Performance</h2>
+            <p>Sleep directly impacts your physical performance. During deep sleep, your body releases growth hormone, which is vital for muscle repair and growth. Adequate rest also improves reaction times, coordination, and endurance—key factors for any workout. On the flip side, sleep deprivation can reduce your motivation to exercise, increase perceived exertion (making workouts feel harder), and slow recovery, leading to a higher risk of injury.</p>
+            <p>For athletes, even a single night of poor sleep can decrease performance by up to 10%. If you’re aiming to hit personal bests or build strength, ensuring quality sleep should be a top priority in your routine.</p>
+        </section>
+
+        <section class="sleep-table">
+            <h2>Stages of Sleep</h2>
+            <table>
+                <tr>
+                    <th>Stage</th>
+                    <th>Duration (% of Sleep)</th>
+                    <th>Key Benefits</th>
+                </tr>
+                <tr>
+                    <td>Stage 1 (Light Sleep)</td>
+                    <td>5-10%</td>
+                    <td>Transition to sleep, muscle relaxation</td>
+                </tr>
+                <tr>
+                    <td>Stage 2 (Light Sleep)</td>
+                    <td>45-55%</td>
+                    <td>Body temperature drops, heart rate slows</td>
+                </tr>
+                <tr>
+                    <td>Stage 3 (Deep Sleep)</td>
+                    <td>15-25%</td>
+                    <td>Muscle repair, growth hormone release</td>
+                </tr>
+                <tr>
+                    <td>REM Sleep</td>
+                    <td>20-25%</td>
+                    <td>Brain activity increases, dreaming, memory consolidation</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="sleep-graph">
+            <h2>Recommended Sleep by Age</h2>
+            <p>Here’s a breakdown of recommended sleep durations for different age groups:</p>
+            <pre>
+Adults (18-64) █████████ 7-9 hrs
+Teens (14-17)  ██████████ 8-10 hrs
+Kids (6-13)    ███████████ 9-11 hrs
+Toddlers (1-5) █████████████ 10-14 hrs
+            </pre>
+        </section>
+
+        <section class="content-section">
+            <h2>How Sleep Affects Your Metabolism</h2>
+            <p>Sleep plays a significant role in regulating your metabolism. When you’re sleep-deprived, your body produces more ghrelin (the hunger hormone) and less leptin (the satiety hormone), leading to increased appetite and cravings for high-calorie foods. This hormonal imbalance can make it harder to maintain a healthy weight or stick to your nutrition goals.</p>
+            <p>Additionally, lack of sleep can reduce insulin sensitivity, increasing your risk of type 2 diabetes. Getting enough rest helps stabilize blood sugar levels, supports fat-burning, and ensures your metabolism runs smoothly, making it easier to achieve your fitness goals.</p>
+        </section>
+
+        <section class="strategy-section">
+            <div class="strategy-card">
+                <h3>Consistent Schedule</h3>
+                <p>Go to bed and wake up at the same time every day to regulate your body’s internal clock.</p>
+            </div>
+            <div class="strategy-card">
+                <h3>Limit Screen Time</h3>
+                <p>Avoid screens 1-2 hours before bed to reduce blue light exposure, which can suppress melatonin.</p>
+            </div>
+            <div class="strategy-card">
+                <h3>Create a Sleep Environment</h3>
+                <p>Keep your bedroom dark, quiet, and cool (around 60-67°F) for optimal rest.</p>
+            </div>
+            <div class="strategy-card">
+                <h3>Wind Down Routine</h3>
+                <p>Practice calming activities like reading or meditation to prepare your mind for sleep.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Tips for Better Sleep Quality</h2>
+            <p>Improving your sleep quality can have a profound impact on your health and fitness. Here are some actionable tips:</p>
+            <ul>
+                <li><strong>Avoid Caffeine Late in the Day:</strong> Limit caffeine intake at least 6 hours before bedtime to prevent sleep disruption.</li>
+                <li><strong>Exercise Regularly:</strong> Physical activity promotes better sleep, but avoid intense workouts close to bedtime.</li>
+                <li><strong>Limit Alcohol:</strong> While alcohol may make you feel sleepy, it disrupts REM sleep and reduces overall sleep quality.</li>
+                <li><strong>Manage Stress:</strong> Practice stress-reduction techniques like deep breathing or journaling to calm your mind.</li>
+                <li><strong>Track Your Sleep:</strong> Use a sleep tracker to monitor patterns and identify areas for improvement.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>The Connection Between Sleep and Nutrition</h2>
+            <p>Your diet and sleep are closely linked. Eating a balanced diet with foods rich in magnesium (like spinach and almonds) and tryptophan (like turkey and bananas) can promote better sleep. On the other hand, heavy meals or spicy foods close to bedtime can cause discomfort and disrupt your rest. Timing matters—try to finish eating at least 2-3 hours before bed to allow for proper digestion.</p>
+            <p>Additionally, poor sleep can lead to cravings for sugary or high-fat foods, creating a cycle of unhealthy eating. By prioritizing both sleep and nutrition, you can break this cycle and support your overall wellness.</p>
+        </section>
+
+        <div class="cta">
+            <a href="dashboard.html">Track Your Sleep Now</a>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            
+
+            <hr class="mb-4">
+
+            <div class="row align-items-center ">
+                <!-- Copyright Section -->
+               
+
+                <!-- Made With Love Section -->
+                <div class="col-md-5 col-lg-4 ">
+                    <p style="color: #CAF160;">Developed & Designed with ❤ Team Deepan</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

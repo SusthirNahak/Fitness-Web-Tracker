@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition & Meal Tracking - Fitness Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0F0E17;
+            color: #FFFFFF;
+            line-height: 1.6;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('https://fitness-web-tracker.vercel.app/assets/topographic-pattern.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 88vw;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        #stickyHeader {
+            background-color: #000000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: auto;
+            width: 140px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #CFFF04;
+        }
+
+        .login .btn {
+            background-color: #CFFF04;
+            color: #0F0E17;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .login .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(207, 255, 4, 0.5);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+
+        .hero-section h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #CFFF04;
+            text-transform: uppercase;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            background-color: rgba(26, 24, 35, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .content-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #D1D1D1;
+        }
+
+        .content-section ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .content-section ul li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #D1D1D1;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .content-section ul li:before {
+            content: '•';
+            color: #CFFF04;
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+        }
+
+        .nutrient-table {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .nutrient-table h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(26, 24, 35, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #2A2833;
+        }
+
+        th {
+            background-color: #CFFF04;
+            color: #0F0E17;
+        }
+
+        td {
+            color: #D1D1D1;
+        }
+
+        .macro-graph {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .macro-graph h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        pre {
+            background-color: #2A2833;
+            padding: 20px;
+            border-radius: 5px;
+            color: #D1D1D1;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            white-space: pre;
+        }
+
+        .meal-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .meal-card {
+            background-color: rgba(26, 24, 35, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .meal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px rgba(207, 255, 4, 0.3);
+        }
+
+        .meal-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #CFFF04;
+            margin-bottom: 10px;
+        }
+
+        .meal-card p {
+            color: #D1D1D1;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background-color: #CFFF04;
+            color: #0F0E17;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(207, 255, 4, 0.5);
+        }
+
+        /* Footer Styling */
+        footer.bg-dark {
+            background-color: #0F0E17;
+            color: #FFFFFF;
+        }
+
+        footer h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #CFFF04;
+        }
+
+        footer p, footer a {
+            font-size: 1rem;
+            color: #f3f3f3;
+        }
+
+        footer a:hover {
+            color: #CFFF04;
+            text-decoration: none;
+        }
+
+        footer hr {
+            border-top: 1px solid rgba(207, 255, 4, 0.2);
+        }
+
+        footer .row.align-items-center p {
+            margin: 0;
+        }
+
+        footer .fab {
+            transition: color 0.3s;
+        }
+
+        footer .fab:hover {
+            color: #CFFF04;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .content-section h2, .nutrient-table h2, .macro-graph h2 {
+                font-size: 1.8rem;
+            }
+
+            .content-section p, .content-section ul li {
+                font-size: 1rem;
+            }
+
+            .meal-card {
+                width: 100%;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        footer .row.align-items-center p {
+    margin: 0;
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <header id="stickyHeader">
+        <div class="container">
+            <div class="top-bar">
+                <div class="logo">
+                    <a href="#">
+                        <img alt="logo" src="./assets/img/fitness-logo.png">
+                    </a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"></a></li>
+                        <li><a href="Bmi-body-stats.html">BMI & Body Stats</a></li>
+                        <li><a href="activity-log.html">Activity Log</a></li>
+                        <li><a href="nutrition-meal-tracking.html">Meal Tracking</a></li>
+                        <li><a href="sleep-analysis.html">Sleep Analysis</a></li>
+                        <li><a href="index.html">Home</a></li>
+                    </ul>
+                </nav>
+                <div class="login">
+                    <a href="./dashboard.html" class="btn"><span>Dashboard</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Nutrition & Meal Tracking</h1>
+            <p>Fuel your body right—learn how to track your meals, balance your nutrients, and achieve your fitness goals.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Why Nutrition Matters</h2>
+            <p>Nutrition is the foundation of a healthy lifestyle and plays a critical role in achieving your fitness goals. What you eat directly impacts your energy levels, workout performance, recovery, and overall well-being. Proper nutrition ensures your body gets the right balance of macronutrients (carbohydrates, proteins, and fats) and micronutrients (vitamins and minerals) to function optimally.</p>
+            <p>Tracking your meals helps you stay mindful of what you’re consuming, avoid overeating, and ensure you’re meeting your nutritional needs. It’s especially important for goals like weight loss, muscle gain, or improving athletic performance, as it allows you to adjust your intake based on your activity level and progress.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Key Nutrients to Understand</h2>
+            <p>A balanced diet includes a variety of nutrients, each serving a specific purpose in your body:</p>
+            <ul>
+                <li><strong>Carbohydrates:</strong> Your body’s primary energy source, found in foods like whole grains, fruits, and vegetables.</li>
+                <li><strong>Proteins:</strong> Essential for muscle repair and growth, sourced from meats, eggs, beans, and dairy.</li>
+                <li><strong>Fats:</strong> Provide long-lasting energy and support hormone production, found in nuts, avocados, and oils.</li>
+                <li><strong>Vitamins and Minerals:</strong> Support immune function, bone health, and more—think leafy greens, fruits, and fortified foods.</li>
+                <li><strong>Water:</strong> Crucial for hydration, especially during and after workouts.</li>
+            </ul>
+        </section>
+
+        <section class="nutrient-table">
+            <h2>Nutrient Breakdown of Common Foods</h2>
+            <table>
+                <tr>
+                    <th>Food (100g)</th>
+                    <th>Carbs (g)</th>
+                    <th>Protein (g)</th>
+                    <th>Fats (g)</th>
+                    <th>Calories (kcal)</th>
+                </tr>
+                <tr>
+                    <td>Chicken Breast</td>
+                    <td>0</td>
+                    <td>31</td>
+                    <td>3.6</td>
+                    <td>165</td>
+                </tr>
+                <tr>
+                    <td>Quinoa</td>
+                    <td>21</td>
+                    <td>5</td>
+                    <td>2.5</td>
+                    <td>120</td>
+                </tr>
+                <tr>
+                    <td>Avocado</td>
+                    <td>9</td>
+                    <td>2</td>
+                    <td>15</td>
+                    <td>160</td>
+                </tr>
+                <tr>
+                    <td>Broccoli</td>
+                    <td>7</td>
+                    <td>3</td>
+                    <td>0.4</td>
+                    <td>35</td>
+                </tr>
+                <tr>
+                    <td>Almonds</td>
+                    <td>22</td>
+                    <td>21</td>
+                    <td>49</td>
+                    <td>579</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="macro-graph">
+            <h2>Daily Macronutrient Distribution</h2>
+            <p>Here’s a sample macronutrient split for a balanced diet (based on a 2000 kcal diet):</p>
+            <pre>
+Carbs (50%) ██████████ 250g
+Protein (25%) █████ 125g
+Fats (25%) █████ 56g
+            </pre>
+        </section>
+
+        <section class="content-section">
+            <h2>Benefits of Meal Tracking</h2>
+            <p>Meal tracking isn’t just about counting calories—it’s about understanding your eating habits and making informed choices. Here’s why it’s worth the effort:</p>
+            <ul>
+                <li><strong>Awareness:</strong> See exactly what you’re eating and identify areas for improvement, like reducing processed foods.</li>
+                <li><strong>Balance:</strong> Ensure you’re getting the right mix of macronutrients to support your goals.</li>
+                <li><strong>Portion Control:</strong> Avoid overeating by logging portion sizes and staying within your calorie needs.</li>
+                <li><strong>Consistency:</strong> Build healthy eating habits by tracking daily and planning meals ahead of time.</li>
+                <li><strong>Goal Tracking:</strong> Adjust your intake based on your fitness goals, whether it’s losing fat or gaining muscle.</li>
+            </ul>
+        </section>
+
+        <section class="meal-section">
+            <div class="meal-card">
+                <h3>Weight Loss Meal</h3>
+                <p>Grilled chicken salad with spinach, cucumber, and a light vinaigrette. High protein, low calories.</p>
+            </div>
+            <div class="meal-card">
+                <h3>Muscle Gain Meal</h3>
+                <p>Salmon with quinoa and steamed broccoli. Packed with protein and healthy carbs for recovery.</p>
+            </div>
+            <div class="meal-card">
+                <h3>Energy Boost Meal</h3>
+                <p>Oatmeal with berries, chia seeds, and a drizzle of honey. Ideal for sustained energy.</p>
+            </div>
+            <div class="meal-card">
+                <h3>Post-Workout Snack</h3>
+                <p>Greek yogurt with a banana and a handful of almonds. Quick protein and carb combo.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Tips for Effective Meal Tracking</h2>
+            <p>Make meal tracking a seamless part of your routine with these tips:</p>
+            <ul>
+                <li><strong>Plan Ahead:</strong> Prepare meals in advance to avoid impulsive eating decisions.</li>
+                <li><strong>Use Tools:</strong> Leverage apps or journals to log your meals accurately and easily.</li>
+                <li><strong>Measure Portions:</strong> Use a food scale or measuring cups to ensure accurate tracking.</li>
+                <li><strong>Focus on Quality:</strong> Prioritize whole, nutrient-dense foods over processed options.</li>
+                <li><strong>Stay Flexible:</strong> Allow for occasional treats to maintain a sustainable approach.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>The Role of Hydration in Nutrition</h2>
+            <p>Water is an often-overlooked nutrient, but it’s essential for every bodily function. Proper hydration supports digestion, nutrient absorption, and temperature regulation. It’s especially important for active individuals, as dehydration can impair workout performance and recovery. Aim for at least 2-3 liters of water per day, more if you’re exercising intensely. Foods like cucumbers, watermelon, and oranges also contribute to your daily water intake.</p>
+            <p>For those engaging in prolonged or intense workouts, electrolyte-rich drinks (like coconut water) can help replenish sodium, potassium, and magnesium lost through sweat. However, avoid sugary sports drinks unless absolutely necessary, as they can add unnecessary calories.</p>
+        </section>
+
+        <div class="cta">
+            <a href="dashboard.html">Track Your Nutrition</a>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            
+
+            <hr class="mb-4">
+
+            <div class="row align-items-center ">
+                <!-- Copyright Section -->
+               
+
+                <!-- Made With Love Section -->
+                <div class="col-md-5 col-lg-4 ">
+                    <p style="color: #CAF160;">Developed & Designed with ❤ Team Deepan</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

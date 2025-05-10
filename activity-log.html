@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Log - Fitness Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0F0E17;
+            color: #FFFFFF;
+            line-height: 1.6;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('https://fitness-web-tracker.vercel.app/assets/topographic-pattern.png');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .container {
+            width: 88vw;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        #stickyHeader {
+            background-color: #000000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: auto;
+            width: 140px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #CFFF04;
+        }
+
+        .login .btn {
+            background-color: #CFFF04;
+            color: #0F0E17;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .login .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(207, 255, 4, 0.5);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+
+        .hero-section h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #CFFF04;
+            text-transform: uppercase;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            background-color: rgba(26, 24, 35, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .content-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        .content-section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #D1D1D1;
+        }
+
+        .content-section ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .content-section ul li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #D1D1D1;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .content-section ul li:before {
+            content: '•';
+            color: #CFFF04;
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+        }
+
+        .exercise-table {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .exercise-table h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(26, 24, 35, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #2A2833;
+        }
+
+        th {
+            background-color: #CFFF04;
+            color: #0F0E17;
+        }
+
+        td {
+            color: #D1D1D1;
+        }
+
+        .calorie-graph {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .calorie-graph h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #CFFF04;
+            margin-bottom: 20px;
+        }
+
+        pre {
+            background-color: #2A2833;
+            padding: 20px;
+            border-radius: 5px;
+            color: #D1D1D1;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            white-space: pre;
+        }
+
+        .food-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .food-card {
+            background-color: rgba(26, 24, 35, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .food-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px rgba(207, 255, 4, 0.3);
+        }
+
+        .food-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #CFFF04;
+            margin-bottom: 10px;
+        }
+
+        .food-card p {
+            color: #D1D1D1;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background-color: #CFFF04;
+            color: #0F0E17;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(207, 255, 4, 0.5);
+        }
+
+        /* Footer Styling */
+        footer.bg-dark {
+            background-color: #0F0E17;
+            color: #FFFFFF;
+        }
+
+        footer h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            color: #CFFF04;
+        }
+
+        footer p, footer a {
+            font-size: 1rem;
+            color: #f3f3f3;
+        }
+
+        footer a:hover {
+            color: #CFFF04;
+            text-decoration: none;
+        }
+
+        footer hr {
+            border-top: 1px solid rgba(207, 255, 4, 0.2);
+        }
+
+        footer .row.align-items-center p {
+            margin: 0;
+        }
+
+        footer .fab {
+            transition: color 0.3s;
+        }
+
+        footer .fab:hover {
+            color: #CFFF04;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .content-section h2, .exercise-table h2, .calorie-graph h2 {
+                font-size: 1.8rem;
+            }
+
+            .content-section p, .content-section ul li {
+                font-size: 1rem;
+            }
+
+            .food-card {
+                width: 100%;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        footer .row.align-items-center p {
+    margin: 0;
+    text-align: center;
+}
+    </style>
+</head>
+<body>
+    <header id="stickyHeader">
+        <div class="container">
+            <div class="top-bar">
+                <div class="logo">
+                    <a href="#">
+                        <img alt="logo" src="./assets/img/fitness-logo.png">
+                    </a>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"></a></li>
+                        <li><a href="Bmi-body-stats.html">BMI & Body Stats</a></li>
+                        <li><a href="activity-log.html">Activity Log</a></li>
+                        <li><a href="nutrition-meal-tracking.html">Meal Tracking</a></li>
+                        <li><a href="sleep-analysis.html">Sleep Analysis</a></li>
+                        <li><a href="index.html">Home</a></li>
+                    </ul>
+                </nav>
+                <div class="login">
+                    <a href="./dashboard.html" class="btn"><span>Dashboard</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Master Your Activity Log</h1>
+            <p>Discover the power of tracking your physical activities to boost your fitness, improve your health, and achieve your goals.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Why Track Your Activity?</h2>
+            <p>Tracking your physical activity is a game-changer for anyone serious about fitness. It helps you stay accountable, monitor progress, and identify areas for improvement. By logging your workouts, you can see how consistent you are, how many calories you're burning, and how your body responds over time. Activity tracking also keeps you motivated by celebrating milestones, whether it's running your first 5K or hitting a new personal record in the gym.</p>
+            <p>Moreover, activity logs provide valuable data for optimizing your routine. For example, you might notice that high-intensity workouts leave you feeling energized, while long cardio sessions make you sluggish. With this insight, you can tailor your workouts to suit your body and goals, ensuring you get the most out of every session.</p>
+        </section>
+
+        <section class="exercise-table">
+            <h2>Benefits of Different Exercises</h2>
+            <table>
+                <tr>
+                    <th>Activity</th>
+                    <th>Calories Burned (per 30 min, 70 kg person)</th>
+                    <th>Key Benefits</th>
+                </tr>
+                <tr>
+                    <td>Yoga</td>
+                    <td>120 kcal</td>
+                    <td>Improves flexibility, reduces stress</td>
+                </tr>
+                <tr>
+                    <td>Running</td>
+                    <td>300 kcal</td>
+                    <td>Boosts cardiovascular health</td>
+                </tr>
+                <tr>
+                    <td>Cycling</td>
+                    <td>210 kcal</td>
+                    <td>Strengthens legs, low-impact</td>
+                </tr>
+                <tr>
+                    <td>Swimming</td>
+                    <td>250 kcal</td>
+                    <td>Full-body workout, improves endurance</td>
+                </tr>
+                <tr>
+                    <td>Weightlifting</td>
+                    <td>180 kcal</td>
+                    <td>Builds muscle, increases metabolism</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="calorie-graph">
+            <h2>Calorie Burn Comparison</h2>
+            <p>Here’s a simple graph comparing calorie burn for 30 minutes of activity (for a 70 kg person):</p>
+            <pre>
+Running    ██████████ 300 kcal
+Swimming   ███████ 250 kcal
+Cycling    ██████ 210 kcal
+Weightlift █████ 180 kcal
+Yoga       ████ 120 kcal
+            </pre>
+        </section>
+
+        <section class="content-section">
+            <h2>How Food Fuels Your Workouts</h2>
+            <p>What you eat before and after your workouts can significantly impact your performance and recovery. Pre-workout meals should provide energy, while post-workout meals should aid in muscle repair and replenish glycogen stores. Carbohydrates are key for energy, while protein is essential for recovery. Healthy fats can also provide sustained energy for longer workouts.</p>
+            <p>Timing matters too—eating a balanced meal 2-3 hours before exercising ensures you have enough fuel, while a post-workout snack within 30 minutes helps kickstart recovery. Hydration is equally important; drink water throughout the day and consider electrolyte-rich drinks for intense sessions.</p>
+        </section>
+
+        <section class="food-section">
+            <div class="food-card">
+                <h3>Post-Workout Protein</h3>
+                <p>Chicken Breast: 26g protein per 100g. Perfect for muscle repair after strength training.</p>
+            </div>
+            <div class="food-card">
+                <h3>Energy-Boosting Carbs</h3>
+                <p>Sweet Potatoes: Packed with complex carbs for sustained energy during cardio sessions.</p>
+            </div>
+            <div class="food-card">
+                <h3>Healthy Fats</h3>
+                <p>Avocado: Provides healthy fats to support long-duration activities like cycling.</p>
+            </div>
+            <div class="food-card">
+                <h3>Hydration Boost</h3>
+                <p>Coconut Water: Natural electrolytes to rehydrate after intense workouts.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Tips for Effective Activity Tracking</h2>
+            <p>Make the most of your activity log with these practical tips:</p>
+            <ul>
+                <li><strong>Be Consistent:</strong> Log your activities daily to build a clear picture of your habits.</li>
+                <li><strong>Track Variety:</strong> Include different types of exercises to ensure a balanced fitness routine.</li>
+                <li><strong>Monitor Intensity:</strong> Note how you feel during workouts to adjust intensity as needed.</li>
+                <li><strong>Set Goals:</strong> Use your log to set achievable goals, like increasing your weekly workout time.</li>
+                <li><strong>Celebrate Progress:</strong> Reflect on your achievements, like running farther or lifting heavier weights.</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2>The Science of Recovery</h2>
+            <p>Recovery is just as important as the workout itself. When you exercise, your muscles experience tiny tears that need to heal to grow stronger. Proper recovery involves rest, nutrition, and active strategies like stretching or foam rolling. Sleep plays a critical role—aim for 7-9 hours per night to allow your body to repair itself. Overtraining can lead to fatigue, injury, and burnout, so listen to your body and take rest days when needed.</p>
+            <p>Active recovery, such as light walking or yoga on rest days, can also improve circulation and reduce muscle soreness. Pair this with a protein-rich diet to support muscle repair, and you’ll be ready for your next workout in no time.</p>
+        </section>
+
+        <div class="cta">
+            <a href="dashboard.html">Track Your Activity Log</a>
+        </div>
+    </div>
+
+   <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-md-left">
+            
+
+            <hr class="mb-4">
+
+            <div class="row align-items-center ">
+                <!-- Copyright Section -->
+               
+
+                <!-- Made With Love Section -->
+                <div class="col-md-5 col-lg-4 ">
+                    <p style="color: #CAF160;">Developed & Designed with ❤ Team Deepan</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
